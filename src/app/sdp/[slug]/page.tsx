@@ -271,12 +271,12 @@ export default function SDPSubjectPage({ params }: { params: Promise<{ slug: str
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {question.options.map((opt, i) => {
                                     const isSelected = selected === i;
-                                    const isCorrect = i === question.answer;
+                                    const isCorrect = question && i === question.answer;
                                     const showResult = selected !== null;
                                     let cls = "border border-zinc-700 bg-zinc-800/40 text-zinc-300 hover:bg-zinc-800/80 hover:border-zinc-600";
                                     if (showResult) {
                                         if (isCorrect) cls = "border-green-500/60 bg-green-500/10 text-green-300";
-                                        else if (isSelected && !isCorrect) cls = "border-red-500/60 bg-red-500/10 text-red-300";
+                                        else if (isSelected && !isCorrect) cls = "border-red-500/10 bg-red-500/10 text-red-300";
                                         else cls = "border-zinc-800 bg-zinc-900/30 text-zinc-500";
                                     }
 
@@ -308,15 +308,15 @@ export default function SDPSubjectPage({ params }: { params: Promise<{ slug: str
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0 }}
-                                    className={`p-5 rounded-2xl border ${selected === question.answer ? 'border-green-500/30 bg-green-500/5' : 'border-amber-500/30 bg-amber-500/5'}`}
+                                    className={`p-5 rounded-2xl border ${question && selected === question.answer ? 'border-green-500/30 bg-green-500/5' : 'border-amber-500/30 bg-amber-500/5'}`}
                                 >
-                                    <div className={`flex items-center gap-2 mb-2 text-sm font-bold ${selected === question.answer ? 'text-green-400' : 'text-amber-400'}`}>
-                                        {selected === question.answer
+                                    <div className={`flex items-center gap-2 mb-2 text-sm font-bold ${question && selected === question.answer ? 'text-green-400' : 'text-amber-400'}`}>
+                                        {question && selected === question.answer
                                             ? <><CheckCircle2 className="h-4 w-4" /> Correct! Well done</>
                                             : <><XCircle className="h-4 w-4" /> Incorrect — here's why</>
                                         }
                                     </div>
-                                    <p className="text-zinc-300 text-sm leading-relaxed">{question.explanation}</p>
+                                    <p className="text-zinc-300 text-sm leading-relaxed">{question?.explanation}</p>
                                 </motion.div>
                             )}
                         </AnimatePresence>
