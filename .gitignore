@@ -39,3 +39,20 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# logs & temporary files
+*.log
+*.txt
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!next.config.ts
+!components.json
+!*.md
+
+# local data
+/pyq/
+/extracted_pyq/
+*.pdf
+*.pptx
