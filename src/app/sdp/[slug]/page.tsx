@@ -39,7 +39,7 @@ export default function SDPSubjectPage({ params }: { params: Promise<{ slug: str
     const [showExplanation, setShowExplanation] = useState(false);
     const [score, setScore] = useState(0);
 
-    const topic = subject?.topics[activeTopic];
+    const topic = subject?.topics?.[activeTopic];
     const questions = topic?.questions ?? [];
     const question: MCQuestion | undefined = questions[currentQ];
 
@@ -79,10 +79,11 @@ export default function SDPSubjectPage({ params }: { params: Promise<{ slug: str
     }
 
     function handleSelectAnswer(idx: number) {
-        if (selected !== null || !question) return; // already answered or no question
+        const q = questions[currentQ];
+        if (selected !== null || !q) return; // already answered or no question
         setSelected(idx);
         setShowExplanation(true);
-        if (idx === question.answer) {
+        if (idx === q.answer) {
             setScore(s => s + 1);
         }
         const updated = [...answers];
@@ -302,7 +303,7 @@ export default function SDPSubjectPage({ params }: { params: Promise<{ slug: str
 
                         {/* Explanation */}
                         <AnimatePresence>
-                            {showExplanation && (
+                            {showExplanation && question && (
                                 <motion.div
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
