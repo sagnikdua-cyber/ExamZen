@@ -20,7 +20,11 @@ export const authOptions: NextAuthOptions = {
                     throw new Error("Invalid credentials");
                 }
 
-                await dbConnect();
+                const db = await dbConnect();
+                if (!db) {
+                    throw new Error("Database connection unavailable");
+                }
+
 
                 const user = await User.findOne({ email: credentials.email });
 

@@ -4,7 +4,10 @@ import Subject from "@/models/Subject";
 import PYQ from "@/models/PYQ";
 
 export async function GET() {
-    await dbConnect();
+    const db = await dbConnect();
+    if (!db) {
+        return NextResponse.json({ error: "Database connection unavailable" }, { status: 503 });
+    }
 
     try {
         const subjects = await Subject.find({});

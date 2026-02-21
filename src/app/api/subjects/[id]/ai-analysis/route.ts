@@ -46,7 +46,10 @@ export async function GET(
     { params }: { params: Promise<{ id: string }> }
 ) {
     const { id } = await params;
-    await dbConnect();
+    const db = await dbConnect();
+    if (!db) {
+        return NextResponse.json({ error: "Database connection unavailable" }, { status: 503 });
+    }
     try {
         const insight = await SubjectInsight.findOne({ subjectId: id });
         if (!insight) return NextResponse.json({ message: "No analysis found" }, { status: 404 });
@@ -65,7 +68,10 @@ export async function POST(
     { params }: { params: Promise<{ id: string }> }
 ) {
     const { id } = await params;
-    await dbConnect();
+    const db = await dbConnect();
+    if (!db) {
+        return NextResponse.json({ error: "Database connection unavailable" }, { status: 503 });
+    }
 
     try {
         const { syllabus } = await req.json();

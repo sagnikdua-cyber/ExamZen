@@ -6,7 +6,10 @@ import Feedback from "@/models/Feedback";
 
 export async function GET() {
     try {
-        await dbConnect();
+        const db = await dbConnect();
+        if (!db) {
+            return NextResponse.json({ message: "Database connection unavailable" }, { status: 503 });
+        }
         const feedbackList = await Feedback.find().sort({ createdAt: -1 });
         return NextResponse.json(feedbackList);
     } catch (error: any) {
@@ -29,7 +32,10 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Message and rating are required" }, { status: 400 });
         }
 
-        await dbConnect();
+        const db = await dbConnect();
+        if (!db) {
+            return NextResponse.json({ message: "Database connection unavailable" }, { status: 503 });
+        }
 
         const newFeedback = new Feedback({
             username: (session.user as any).name || "Anonymous Student",

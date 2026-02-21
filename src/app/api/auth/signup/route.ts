@@ -14,7 +14,13 @@ export async function POST(req: Request) {
             );
         }
 
-        await dbConnect();
+        const db = await dbConnect();
+        if (!db) {
+            return NextResponse.json(
+                { message: "Database connection unavailable" },
+                { status: 503 }
+            );
+        }
 
         // Check if user already exists
         const existingUser = await User.findOne({

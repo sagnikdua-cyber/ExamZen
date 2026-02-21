@@ -21,9 +21,11 @@ async function dbConnect() {
   const MONGODB_URI = process.env.MONGODB_URI;
 
   if (!MONGODB_URI) {
-    throw new Error(
-      'Please define the MONGODB_URI environment variable inside .env.local'
+    // During build or in development without .env, don't crash the whole process
+    console.warn(
+      'WARNING: MONGODB_URI is not defined. Database connectivity will be unavailable.'
     );
+    return null;
   }
 
   if (cached.conn) {

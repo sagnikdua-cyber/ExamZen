@@ -4,7 +4,10 @@ import PYQ from '@/models/PYQ';
 import Subject from '@/models/Subject';
 
 export async function GET(request: Request) {
-    await dbConnect();
+    const db = await dbConnect();
+    if (!db) {
+        return NextResponse.json({ error: 'Database connection unavailable' }, { status: 503 });
+    }
     const { searchParams } = new URL(request.url);
     const subjectId = searchParams.get('subjectId');
 
@@ -19,7 +22,10 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-    await dbConnect();
+    const db = await dbConnect();
+    if (!db) {
+        return NextResponse.json({ error: 'Database connection unavailable' }, { status: 503 });
+    }
     try {
         const body = await request.json();
         const pyq = await PYQ.create(body);

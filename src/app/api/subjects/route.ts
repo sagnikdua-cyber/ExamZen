@@ -3,7 +3,10 @@ import dbConnect from '@/lib/db';
 import Subject from '@/models/Subject';
 
 export async function GET() {
-    await dbConnect();
+    const db = await dbConnect();
+    if (!db) {
+        return NextResponse.json({ error: 'Database connection unavailable' }, { status: 503 });
+    }
 
     try {
         const seedSubjects = [

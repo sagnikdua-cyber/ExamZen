@@ -22,7 +22,10 @@ export async function POST(req: Request) {
         const { message, subjectId, history } = await req.json();
         console.log(`AI Guru: Received request for message: "${message.substring(0, 20)}..." | Subject: ${subjectId}`);
 
-        await dbConnect();
+        const db = await dbConnect();
+        if (!db) {
+            return NextResponse.json({ error: "Database connection unavailable" }, { status: 503 });
+        }
 
         if (!mongoose.Types.ObjectId.isValid(subjectId)) {
             console.error(`AI Guru: Invalid subjectId: ${subjectId}`);

@@ -12,7 +12,10 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
         }
 
-        await dbConnect();
+        const db = await dbConnect();
+        if (!db) {
+            return NextResponse.json({ message: "Database connection unavailable" }, { status: 503 });
+        }
 
         const userId = (session.user as any).id;
 

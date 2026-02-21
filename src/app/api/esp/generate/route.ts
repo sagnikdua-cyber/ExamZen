@@ -16,7 +16,10 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "subject, chapter, and notes are required" }, { status: 400 });
         }
 
-        await dbConnect();
+        const db = await dbConnect();
+        if (!db) {
+            return NextResponse.json({ error: "Database connection unavailable" }, { status: 503 });
+        }
 
         const genAI = new GoogleGenerativeAI(apiKey);
         const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
@@ -101,7 +104,10 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: "subject query param required" }, { status: 400 });
     }
 
-    await dbConnect();
+    const db = await dbConnect();
+    if (!db) {
+        return NextResponse.json({ error: "Database connection unavailable" }, { status: 503 });
+    }
 
     try {
         const notes = await ESPNote.find({ subject }).sort({ createdAt: -1 });
