@@ -79,7 +79,7 @@ export default function SDPSubjectPage({ params }: { params: Promise<{ slug: str
     }
 
     function handleSelectAnswer(idx: number) {
-        if (selected !== null) return; // already answered
+        if (selected !== null || !question) return; // already answered or no question
         setSelected(idx);
         setShowExplanation(true);
         if (idx === question.answer) {

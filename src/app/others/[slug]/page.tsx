@@ -117,6 +117,8 @@ function QuizView({ questions, color, border, bg }: { questions: SampleQuestion[
 
     const q = questions[current];
 
+    if (!q) return null;
+
     function pick(i: number) {
         if (selected !== null) return;
         setSelected(i);
