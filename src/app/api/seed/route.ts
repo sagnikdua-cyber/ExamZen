@@ -102,6 +102,7 @@ export async function GET() {
                     topics: item.topics,
                     repetitionCount: item.repetitionCount,
                     fileUrl: item.fileUrl || null,
+                    questionText: item.questionText, // Stable fallback
                     extractedContent: { questions: [item.questionText] },
                 };
             } else {
@@ -110,13 +111,21 @@ export async function GET() {
         }
 
         const pyqsToInsert = Object.values(grouped);
-        const result = await PYQ.insertMany(pyqsToInsert);
+
+        // Use findOneAndUpdate to keep IDs stable for PYQs as well
+        for (const pyqData of pyqsToInsert) {
+            await PYQ.findOneAndUpdate(
+                { subjectId: pyqData.subjectId, year: pyqData.year },
+                pyqData,
+                { upsert: true, new: true }
+            );
+        }
 
         return NextResponse.json({
             success: true,
             subjectsSeeded: subjects.length,
-            pyqsSeeded: result.length,
-            message: "Database seeded successfully. Refresh your subject pages now!"
+            pyqsSeeded: pyqsToInsert.length,
+            message: "Database seeded successfully with STABLE IDs. Refresh your subject pages now!"
         });
     } catch (error: any) {
         console.error("Seed error:", error);
