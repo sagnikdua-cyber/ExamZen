@@ -7,7 +7,7 @@ import Link from "next/link";
 import SubjectCard from "@/components/SubjectCard";
 
 export default function CoreSubjectsPage() {
-    const [subjects, setSubjects] = useState([]);
+    const [subjects, setSubjects] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -17,7 +17,7 @@ export default function CoreSubjectsPage() {
                 const res = await fetch("/api/subjects");
                 const data = await res.json();
                 // Filter for Core, Basic Science, and Humanities
-                const coreSubjects = data.filter(s =>
+                const coreSubjects = data.filter((s: any) =>
                     s.category === "Core" ||
                     s.category === "Basic Science" ||
                     s.category === "Humanities"
@@ -32,7 +32,7 @@ export default function CoreSubjectsPage() {
         fetchSubjects();
     }, []);
 
-    const filteredSubjects = subjects.filter(s =>
+    const filteredSubjects = subjects.filter((s: any) =>
         s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         s.code.toLowerCase().includes(searchQuery.toLowerCase())
     );
