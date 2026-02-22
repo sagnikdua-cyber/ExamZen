@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Search, BookOpen, Sparkles } from "lucide-react";
 import Link from "next/link";
 import SubjectCard from "@/components/SubjectCard";
-import { Input } from "@/components/ui/input";
 
 export default function CoreSubjectsPage() {
     const [subjects, setSubjects] = useState([]);
