@@ -54,5 +54,12 @@ next-env.d.ts
 # local data
 /pyq/
 /extracted_pyq/
+# Allow PDFs/PPTXs for the app, but ignore elsewhere
+# Allow ONLY top-level PDFs for the app in public/pyqs
 *.pdf
 *.pptx
+!public/pyqs/*.pdf
+!public/pyq-papers/*.pdf
+# Keep subdirectories ignored to save space
+public/pyqs/**/
+public/pyq-papers/**/
