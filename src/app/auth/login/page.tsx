@@ -1,17 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/Button";
 import { Sparkles, ArrowRight } from "lucide-react";
-
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
 
-export default function LoginPage() {
+function LoginForm() {
     const searchParams = useSearchParams();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -42,7 +40,6 @@ export default function LoginPage() {
             if (res?.error) {
                 setError(res.error);
             } else {
-                // Fetch session to check onboardingSeen status
                 const session = await getSession();
                 if (session?.user && (session.user as any).onboardingSeen) {
                     router.push("/dashboard");
@@ -100,7 +97,7 @@ export default function LoginPage() {
                             >
                                 {error.includes("No user found") ? (
                                     <div className="flex flex-col gap-2">
-                                        <p>You don't have an account yet!</p>
+                                        <p>You don&apos;t have an account yet!</p>
                                         <Link href="/auth/signup" className="text-purple-400 font-bold hover:underline">
                                             Sign Up First →
                                         </Link>
@@ -143,12 +140,20 @@ export default function LoginPage() {
                 </form>
 
                 <p className="text-center text-zinc-500 text-sm">
-                    Don't have an account?{" "}
+                    Don&apos;t have an account?{" "}
                     <Link href="/auth/signup" className="text-purple-400 hover:text-purple-300 transition-colors">
                         Sign up
                     </Link>
                 </p>
             </motion.div>
         </main>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-black" />}>
+            <LoginForm />
+        </Suspense>
     );
 }
