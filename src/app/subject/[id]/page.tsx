@@ -346,14 +346,20 @@ export default function SubjectPage({ params }: { params: Promise<{ id: string }
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Fetch Subject
-                const subRes = await fetch(`/api/subjects/${id}`);
-                const subData = await subRes.json();
+                // Fetch all data in parallel for better performance
+                const [subRes, pyqRes, insightRes] = await Promise.all([
+                    fetch(`/api/subjects/${id}`),
+                    fetch(`/api/subjects/${id}/pyqs`),
+                    fetch(`/api/subjects/${id}/ai-analysis`)
+                ]);
+
+                const [subData, pyqData] = await Promise.all([
+                    subRes.json(),
+                    pyqRes.json()
+                ]);
+
                 setSubject(subData);
 
-                // Fetch PYQs
-                const pyqRes = await fetch(`/api/subjects/${id}/pyqs`);
-                const pyqData = await pyqRes.json();
                 if (Array.isArray(pyqData)) {
                     setPyqs(pyqData);
                 } else {
@@ -361,8 +367,6 @@ export default function SubjectPage({ params }: { params: Promise<{ id: string }
                     setPyqs([]);
                 }
 
-                // Fetch Insights
-                const insightRes = await fetch(`/api/subjects/${id}/ai-analysis`);
                 if (insightRes.ok) {
                     const insightData = await insightRes.json();
                     setInsights(insightData);

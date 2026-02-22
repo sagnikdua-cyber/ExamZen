@@ -31,38 +31,51 @@ export default function Hero() {
             // ─── PARTICLE SYSTEM ────────────────────────────────────────────
             const container = particlesRef.current;
             if (container) {
-                ACADEMIC_PARTICLES.forEach((sym, i) => {
+                // Triple the density for "more numerous" elements
+                const particleCount = ACADEMIC_PARTICLES.length * 3;
+
+                for (let i = 0; i < particleCount; i++) {
+                    const sym = ACADEMIC_PARTICLES[i % ACADEMIC_PARTICLES.length];
                     const el = document.createElement("div");
                     el.textContent = sym;
-                    el.className = "particle absolute text-xs md:text-sm font-mono font-bold pointer-events-none select-none";
+
+                    // Larger sizes: text-sm to text-2xl for better prominence
+                    const sizes = ["text-sm", "text-md", "text-lg", "text-xl", "text-2xl"];
+                    const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
+
+                    el.className = `particle absolute ${randomSize} font-mono font-black pointer-events-none select-none will-change-transform`;
+
+                    // Higher opacity (0.15 - 0.35) for "better visibility"
+                    const baseOpacity = 0.15 + Math.random() * 0.2;
                     el.style.cssText = `
-                        color: rgba(168,85,247,${0.08 + Math.random() * 0.12});
+                        color: rgba(168,85,247,${baseOpacity});
                         left: ${Math.random() * 100}%;
                         top: ${Math.random() * 100}%;
+                        text-shadow: 0 0 10px rgba(168,85,247,0.1);
                     `;
                     container.appendChild(el);
 
                     gsap.set(el, { scale: 0, opacity: 0 });
                     gsap.to(el, {
-                        scale: 0.8 + Math.random() * 0.7,
+                        scale: 1 + Math.random() * 0.5,
                         opacity: 1,
-                        delay: i * 0.12,
-                        duration: 1.2,
-                        ease: "back.out(1.7)",
+                        delay: (i % ACADEMIC_PARTICLES.length) * 0.05,
+                        duration: 1,
+                        ease: "back.out(1.5)",
                     });
 
                     // Continuous float
                     gsap.to(el, {
-                        y: -30 - Math.random() * 60,
-                        x: (Math.random() - 0.5) * 40,
-                        rotation: (Math.random() - 0.5) * 30,
+                        y: -40 - Math.random() * 80,
+                        x: (Math.random() - 0.5) * 50,
+                        rotation: (Math.random() - 0.5) * 45,
                         repeat: -1,
                         yoyo: true,
-                        duration: 4 + Math.random() * 4,
+                        duration: 5 + Math.random() * 5,
                         ease: "sine.inOut",
-                        delay: Math.random() * 4,
+                        delay: Math.random() * 5,
                     });
-                });
+                }
             }
 
             // ─── LOGO ENTRANCE ───────────────────────────────────────────────
